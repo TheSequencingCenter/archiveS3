@@ -44,15 +44,16 @@ def main() -> None:
 
     try:
         # Upload a file
-        local_file_path: str = 'path/to/local/file'
-        bucket_name:     str = 'your-bucket-name'
-        s3_key:          str = 's3/object/key'
+        local_file_path: str = '/home/seqcenter/archiveS3/testfile'
+        bucket_name:     str = 'seqcenter-ubuntu-image-backup'
+        filename:        str = os.path.basename(local_file_path)  # Extract filename from local file path
+        s3_key:          str = filename                           # Use filename as the S3 key
 
         s3_client.upload_file(local_file_path, bucket_name, s3_key)
         print(f"File uploaded successfully to {bucket_name}/{s3_key}")
 
     except FileNotFoundError:
-        print(f"ERROR: Local file {local_file_path} not found.")
+        print(f"ERROR: Local file {local_file_name} not found.")
         sys.exit(1)
     except boto3.exceptions.S3UploadFailedError as e:
         print(f"ERROR: Failed to upload file to S3: {e}")

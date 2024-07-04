@@ -23,8 +23,8 @@ def upload_file(local_file_path: str, bucket_name: str, s3_client: boto3.client)
     Uploads a file to an S3 bucket.
 
     :param local_file_path: Path to the local file.
-    :param bucket_name: Name of the S3 bucket.
-    :param s3_client: Boto3 S3 client.
+    :param bucket_name:     Name of the S3 bucket.
+    :param s3_client:       Boto3 S3 client.
     """
     try:
         filename: str = os.path.basename(local_file_path)  # Extract filename from local file path
@@ -45,21 +45,21 @@ def upload_file(local_file_path: str, bucket_name: str, s3_client: boto3.client)
 
 def upload_directory(directory_path: str, bucket_name: str, s3_client: boto3.client) -> None:
     """
-    Uploads all files from a local directory to an S3 bucket.
+    Uploads an entire directory to an S3 bucket, preserving the directory structure.
 
     :param directory_path: Path to the local directory.
-    :param bucket_name: Name of the S3 bucket.
-    :param s3_client: Boto3 S3 client.
+    :param bucket_name:    Name of the S3 bucket.
+    :param s3_client:      Boto3 S3 client.
     """
     for root, _, files in os.walk(directory_path):
         for file in files:
             local_file_path = os.path.join(root, file)
-            relative_path   = os.path.relpath(local_file_path, directory_path)
+            relative_path   = os.path.relpath(local_file_path, os.path.dirname(directory_path))
             s3_key          = relative_path.replace("\\", "/")  # Ensure correct S3 key format
 
             try:
                 s3_client.upload_file(local_file_path, bucket_name, s3_key)
-                print(f"File {local_file_path} uploaded successfully to {bucket_name}/{s3_key}")
+                print(f"Directory {local_file_path} uploaded successfully to {bucket_name}/{s3_key}")
             except Exception as e:
                 print(f"ERROR: Failed to upload {local_file_path} to {bucket_name}/{s3_key}: {e}")
 
@@ -103,12 +103,12 @@ def main() -> None:
     except Exception as e:
         print(f"ERROR: Failed to upload file: {e}")
         sys.exit(1)
-        
+
     try:
         # Upload a directory
-        upload_directory('/home/seqcenter/archiveS3', 'seqcenter-ubuntu-image-backup', s3_client)
+        upload_directory('/home/seqcenter/archiveS3/testdir', 'seqcenter-ubuntu-image-backup', s3_client)
     except Exception as e:
-        print(f"ERROR: Failed to upload directory /home/seqcenter/archiveS3 to S3: {e}")
+        print(f"ERROR: Failed to upload directory: {e}")
         sys.exit(1)
 
 # main entry point

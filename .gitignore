@@ -1,2 +1,6 @@
 # files
 .env
+
+# directories
+archives3/
+logs/

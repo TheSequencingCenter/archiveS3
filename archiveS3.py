@@ -109,12 +109,12 @@ def main() -> None:
         logger.error(f"ERROR: Failed to list S3 buckets: {e}")
         sys.exit(1)
 
-    try:
-        # Upload a file
-        upload_file('/home/seqcenter/archiveS3/testfile', 'seqcenter-ubuntu-image-backup', s3_client)
-    except Exception as e:
-        logger.error(f"ERROR: Failed to upload file: {e}")
-        sys.exit(1)
+    # try:
+    #     # Upload a file
+    #     upload_file('/home/seqcenter/archiveS3/testfile', 'seqcenter-ubuntu-image-backup', s3_client)
+    # except Exception as e:
+    #     logger.error(f"ERROR: Failed to upload file: {e}")
+    #     sys.exit(1)
 
     try:
         # upload a directory
